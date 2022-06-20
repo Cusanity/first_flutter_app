@@ -1,200 +1,98 @@
-import 'dart:math';
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-import 'package:first_app/question.dart';
-import 'package:first_app/answer.dart';
-import 'package:first_app/clock.dart';
-import 'package:first_app/ticketType.dart';
-import 'package:first_app/expirationCard.dart';
+import './quiz.dart';
+import './result.dart';
+// void main() {
+//   runApp(MyApp());
+// }
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
+    // TODO: implement createState
     return _MyAppState();
   }
 }
 
 class _MyAppState extends State<MyApp> {
-  int _questionIdx = 0;
-  Timer _timer;
-  DateTime _dateTime = DateTime.now();
-  DateTime _expTime = DateTime.now().add(Duration(minutes: 15));
-  var questions = [
+  final _questions = const [
     {
-      'questionText': 'What\'s your fav color?',
+      'questionText': 'What\'s your favorite color?',
       'answers': [
-        'Black',
-        'Red',
-        'Green',
-        'Yellow',
-      ]
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 5},
+        {'text': 'Green', 'score': 3},
+        {'text': 'White', 'score': 1},
+      ],
     },
     {
-      'questionText': 'What\'s your fav animal?',
+      'questionText': 'What\'s your favorite animal?',
       'answers': [
-        'Cat',
-        'Dog',
-        'Corgi',
-      ]
+        {'text': 'Rabbit', 'score': 3},
+        {'text': 'Snake', 'score': 11},
+        {'text': 'Elephant', 'score': 5},
+        {'text': 'Lion', 'score': 9},
+      ],
     },
     {
-      'questionText': 'Who\'s your fav NBA player?',
+      'questionText': 'Who\'s your favorite instructor?',
       'answers': [
-        'LeBron James',
-        'Steph Curry',
-      ]
+        {'text': 'Max', 'score': 1},
+        {'text': 'Max', 'score': 1},
+        {'text': 'Max', 'score': 1},
+        {'text': 'Max', 'score': 1},
+      ],
     },
   ];
-  void _answerQuestion() {
+  var _questionIndex = 0;
+  var _totalScore = 0;
+
+  void _resetQuiz() {
     setState(() {
-      _questionIdx++;
-    });
-    print(_questionIdx);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    startTimer();
-  }
-
-  void startTimer() {
-    const period = const Duration(seconds: 1);
-    _timer = Timer.periodic(period, (timer) {
-      //更新界面
-      setState(() {
-        _dateTime = DateTime.now();
-        _expTime = DateTime.now().add(Duration(minutes: 15));
-      });
+      _questionIndex = 0;
+      _totalScore = 0;
     });
   }
 
-  String monthNumToText(int num) {
-    var months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
-    return months[num - 1];
+  void _answerQuestion(int score) {
+    // var aBool = true;
+    // aBool = false;
+
+    _totalScore += score;
+
+    setState(() {
+      _questionIndex = _questionIndex + 1;
+    });
+    print(_questionIndex);
+    if (_questionIndex < _questions.length) {
+      print('We have more questions!');
+    } else {
+      print('No more questions!');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // var dummy = const ['Hello'];
+    // dummy.add('Max');
+    // print(dummy);
+    // dummy = [];
+    // questions = []; // does not work if questions is a const
+
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'NFTA Metro',
-                  style: TextStyle(
-                      fontSize: 24.0,
-                      color: Color(0xff3c3c3c),
-                      fontWeight: FontWeight.bold),
-                ),
-                Visibility(
-                  visible: true,
-                  child: Text(
-                    'Show operator your ticket',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                      color: Color(0xff3c3c3c),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.black,
-                ),
-                tooltip: 'Show Snackbar',
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('This is a snackbar')));
-                },
-              ),
-            ]),
-        body: Column(
-          children: <Widget>[
-            Image.asset(
-              "assets/animation.gif",
-              width: 340,
-            ),
-            Center(
-                child: Clock(
-              // DateTime.now().hour.toString() + ':',
-              (_dateTime.hour < 12
-                      ? _dateTime.hour.toString()
-                      : (_dateTime.hour - 12).toString()) +
-                  ':' +
-                  (_dateTime.minute < 10
-                      ? '0' + _dateTime.minute.toString()
-                      : _dateTime.minute.toString()) +
-                  ':' +
-                  (_dateTime.second < 10
-                      ? '0' + _dateTime.second.toString()
-                      : _dateTime.second.toString()) +
-                  ' PM',
-            )),
-            Center(
-              child: TicketType('1 Trip Bus'),
-            ),
-            Center(
-              child: ExpirationCard(monthNumToText(_expTime.month) +
-                  ' ' +
-                  _expTime.day.toString() +
-                  ', ' +
-                  _expTime.year.toString() +
-                  ', ' +
-                  (_expTime.hour > 12 ? _expTime.hour - 12 : _expTime.hour)
-                      .toString() +
-                  ':' +
-                  (_expTime.minute < 10
-                      ? '0' + (_expTime.minute).toString()
-                      : (_expTime.minute).toString()) +
-                  ' ' +
-                  (_expTime.hour > 12 ? 'PM' : 'AM')),
-            )
-          ],
+          title: Text('My First App'),
         ),
-        // _questionIdx < questions.length
-        //     ? Column(
-        //         children: [
-        //           Question(questions[min(_questionIdx, questions.length - 1)]
-        //               ['questionText'] as String),
-        //           ...(questions[min(_questionIdx, questions.length - 1)]
-        //                   ['answers'] as List<String>)
-        //               .map((answer) => Answer(
-        //                     _answerQuestion,
-        //                     answer,
-        //                   ))
-        //               .toList()
-        //         ],
-        //       )
-        //     :
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Result(_totalScore, _resetQuiz),
       ),
     );
   }
