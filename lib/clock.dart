@@ -11,15 +11,15 @@ class Clock extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.all(0),
-      child: ElevatedButton(
+      child: TextButton(
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.white)),
         onPressed: () {  },
         child: Text(
           clockText,
           style: TextStyle(
-              fontSize: 50.0, color: Color(0xff3c3c3c)
-            , fontWeight: FontWeight.bold),
+              fontSize: 56.0, color: Color(0xff3c3c3c)
+            , fontWeight: FontWeight.w900),
         ),
       ),
     );

@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:first_app/NTFA/question.dart';
-import 'package:first_app/NTFA/answer.dart';
 import 'package:first_app/NTFA/clock.dart';
 import 'package:first_app/NTFA/ticketType.dart';
 import 'package:first_app/NTFA/expirationCard.dart';
@@ -22,7 +21,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _questionIdx = 0;
-  Timer _timer;
+  late Timer _timer;
   DateTime _dateTime = DateTime.now();
   DateTime _expTime = DateTime.now().add(Duration(minutes: 15));
   var questions = [
@@ -160,7 +159,7 @@ class _MyAppState extends State<MyApp> {
                   ' PM',
             )),
             Center(
-              child: TicketType('1 Trip Bus'),
+              child: TicketType(),
             ),
             Center(
               child: ExpirationCard(monthNumToText(_expTime.month) +
