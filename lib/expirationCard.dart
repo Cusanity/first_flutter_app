@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ExpirationCard extends StatefulWidget {
-  const ExpirationCard({Key? key}) : super(key: key);
+  String ticketType = 'Bus';
+
+  ExpirationCard({Key? key, required this.ticketType}) : super(key: key);
 
   @override
   State<ExpirationCard> createState() => _ExpirationCardState();
 }
 
 class _ExpirationCardState extends State<ExpirationCard> {
-  DateTime _expTime = DateTime.now().add(Duration(minutes: 15));
-  String ticketType = 'Bus';
+  DateTime get _expTime => widget.ticketType == 'RAIL' ? DateTime.now().add(Duration(minutes: 45)):DateTime.now().add(Duration(minutes: 15));
+  String get ticketTypeText => 'Adult Single Trip ' + (widget.ticketType == 'RAIL' ? 'Rail':'Bus');
 
   String monthNumToText(int num) {
     var months = [
@@ -39,7 +41,7 @@ class _ExpirationCardState extends State<ExpirationCard> {
           children: <Widget>[
             InkWell(
               child: ListTile(
-                title: Text('Adult Single Trip ' + ticketType,
+                title: Text(ticketTypeText,
                     style: TextStyle(
                         fontSize: 22.0,
                         color: Color(0xff3c3c3c),
@@ -50,16 +52,6 @@ class _ExpirationCardState extends State<ExpirationCard> {
                     )),
               ),
               onTap: () {
-                setState(() {
-                  if (ticketType == 'Bus') {
-                    ticketType = 'Rail';
-                    _expTime = DateTime.now().add(Duration(minutes: 45));
-                  }
-                  else{
-                    ticketType = 'Bus';
-                    _expTime = DateTime.now().add(Duration(minutes: 15));
-                  }
-                });
               },
             ),
             Row(

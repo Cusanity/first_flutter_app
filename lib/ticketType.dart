@@ -5,18 +5,18 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 
 class TicketType extends StatefulWidget {
-  const TicketType({Key? key}) : super(key: key);
+  String ticketType;
+  Function callback;
+
+  TicketType({Key? key, required this.ticketType, required this.callback}) : super(key: key);
 
   @override
   State<TicketType> createState() => _TicketTypeState();
 }
 
 class _TicketTypeState extends State<TicketType> {
-  String ticketTypeText = "1 Trip Bus";
-  // 0xfff5b400
+  String get ticketTypeText => "1 Trip "+ widget.ticketType;
   Color ticketColor = Colors.black;
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,14 +37,10 @@ class _TicketTypeState extends State<TicketType> {
                       borderRadius: BorderRadius.circular(30.0),
                     ))),
             onPressed: () {
-              if(ticketTypeText == '1 Trip Bus'){
-                ticketTypeText = '1 Trip RAIL';
-                ticketColor = Color(0xfff5b400);
-              }
-              else{
-                ticketTypeText = '1 Trip Bus';
-                ticketColor = Colors.black;
-              }
+              setState(() {
+                ticketColor = widget.ticketType == 'RAIL' ? Colors.black : Color(0xfff5b400);
+              });
+              widget.callback();
             },
             child: Text(
               ticketTypeText,

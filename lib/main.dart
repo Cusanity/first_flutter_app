@@ -12,6 +12,9 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  String ticketType = 'Bus';
+  Color ticketColor = Colors.black;
+
   @override
   State<StatefulWidget> createState() {
     return _MyAppState();
@@ -23,6 +26,19 @@ class _MyAppState extends State<MyApp> {
   late Timer _timer;
   DateTime _dateTime = DateTime.now();
   DateTime _expTime = DateTime.now().add(Duration(minutes: 15));
+
+  changeTicketTypeAndColor(){
+    setState(() {
+      if(widget.ticketType == 'Bus'){
+        widget.ticketType = 'RAIL';
+        widget.ticketColor = Color(0xfff5b400);
+      }
+      else{
+        widget.ticketType = 'Bus';
+        widget.ticketColor = Colors.black;
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -108,10 +124,13 @@ class _MyAppState extends State<MyApp> {
                   (_dateTime.hour < 12 ? ' AM': ' PM'),
             )),
             Center(
-              child: TicketType(),
+              child: TicketType(
+                  callback: changeTicketTypeAndColor,
+                  ticketType: widget.ticketType,
+              ),
             ),
             Center(
-              child: ExpirationCard(),
+              child: ExpirationCard(ticketType: widget.ticketType),
             )
           ],
         ),
